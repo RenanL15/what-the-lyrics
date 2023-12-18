@@ -6,3 +6,15 @@ input,
 button {
   outline: none;
 }
+
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(23, 23, 23);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: green;
+}
