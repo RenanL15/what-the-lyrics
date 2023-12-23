@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Songs from "./components/Songs";
+import TrackPlayer from "./components/TrackPlayer";
 
 function App() {
   const [inputUrl, setInputUrl] = useState("");
@@ -37,12 +38,16 @@ function App() {
               </div>
             </div>
           </div>
-          {/* <audio controls>
-            <source
-              src="https://p.scdn.co/mp3-preview/eb9de15a4465f504ee0eadba93e7d265ee0ee6ba?cid=e89c58aca13d4e72bc7dc02521952367"
-              type="audio/mpeg"
-            />
-          </audio> */}
+          {/* <button
+            onClick={() => {
+              const song = new Audio(
+                "https://p.scdn.co/mp3-preview/eb9de15a4465f504ee0eadba93e7d265ee0ee6ba?cid=e89c58aca13d4e72bc7dc02521952367"
+              );
+              song.play();
+            }}
+            className="p-5 bg-red-400">
+            Play
+          </button> */}
         </div>
         <Songs playlistUrl={playlistUrl} />
       </div>
