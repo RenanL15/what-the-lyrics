@@ -121,7 +121,7 @@ export default function Songs({ playlistUrl }) {
           ))
         )}
         {noResult && (
-          <span className="text-xl text-white">Playlist não encontrada</span>
+          <span className="text-xl text-white">Playlist not found.</span>
         )}
       </div>
     </>
