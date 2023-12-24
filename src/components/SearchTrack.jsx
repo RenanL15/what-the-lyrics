@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function SearchTrack({
-  playlistData,
-  setPlaylistData,
-  filteredPlaylistData,
-}) {
+export default function SearchTrack({ setPlaylistData, filteredPlaylistData }) {
   const [term, setTerm] = useState("");
 
   useEffect(() => {

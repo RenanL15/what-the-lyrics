@@ -1,18 +1,22 @@
 import { useState } from "react";
 import Songs from "./components/Songs";
-import TrackPlayer from "./components/TrackPlayer";
-import SearchTrack from "./components/SearchTrack";
+import Logo from "./assets/musical-note.png";
+import { FaQuestionCircle } from "react-icons/fa";
 
 function App() {
   const [inputUrl, setInputUrl] = useState("");
   const [playlistUrl, setPlaylistUrl] = useState("");
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-800">
+    <main className="relative flex items-center justify-center min-h-screen bg-gray-800">
+      <button className="absolute top-0 right-0 m-5">
+        <FaQuestionCircle color="#f1f1f1" size={35} />
+      </button>
       <div className="flex flex-col items-center">
-        <h1 className="mt-16 text-4xl font-light text-white">
-          Guess your track!
-        </h1>
+        <div className="flex items-center gap-2 mt-16">
+          <img src={Logo} width={40} alt="Logo" />
+          <h1 className="text-4xl font-light text-white">GuessYourTrack!</h1>
+        </div>
         <div className="flex items-center my-12 max-w-[60rem] mx-6 gap-2">
           <div className="flex flex-col">
             <label htmlFor="" className="text-xl text-white max-sm:text-base">
