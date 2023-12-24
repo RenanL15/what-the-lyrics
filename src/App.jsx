@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Songs from "./components/Songs";
 import TrackPlayer from "./components/TrackPlayer";
+import SearchTrack from "./components/SearchTrack";
 
 function App() {
   const [inputUrl, setInputUrl] = useState("");
@@ -14,7 +15,7 @@ function App() {
         </h1>
         <div className="flex items-center my-12 max-w-[60rem] mx-6 gap-2">
           <div className="flex flex-col">
-            <label htmlFor="" className="text-xl text-white">
+            <label htmlFor="" className="text-xl text-white max-sm:text-base">
               Enter your playlist
             </label>
             <div className="flex">

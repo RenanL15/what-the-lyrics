@@ -7,16 +7,17 @@ import qs from "qs";
 import UnknownSong from "../assets/unk-song.jpg";
 import TrackPlayer from "./TrackPlayer";
 import "animate.css";
+import SearchTrack from "./SearchTrack";
 
 export default function Songs({ playlistUrl }) {
   const [playlistData, setPlaylistData] = useState([]);
+  const [filteredPlaylistData, setFilteredPlaylistData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [noResult, setNoResult] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [track, setTrack] = useState("");
   const [correctTrack, setCorrectTrack] = useState(null);
-  const [selectedTrack, setSelectedTrack] = useState(null);
   const [incorrectGuess, setIncorrectGuess] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState(null);
 
   useEffect(() => {
     const URL = playlistUrl.substr(34, playlistUrl.length);
@@ -50,10 +51,9 @@ export default function Songs({ playlistUrl }) {
                 Math.floor(Math.random() * filteredTracks.length - 1)
               ];
             setPlaylistData(filteredTracks);
+            setFilteredPlaylistData(filteredTracks);
             setTrack(randomTrack.track.preview_url);
             setCorrectTrack(randomTrack.track.id);
-            console.log(randomTrack.track.id);
-            console.log(res.data.tracks.items[3]);
             setLoading(false);
             setNoResult(false);
           })
@@ -71,13 +71,24 @@ export default function Songs({ playlistUrl }) {
 
   return (
     <>
-      {!noResult && !loading && <TrackPlayer track={track} />}
+      {!noResult && !loading && (
+        <>
+          <TrackPlayer track={track} />
+          <SearchTrack
+            playlistData={playlistData}
+            setPlaylistData={setPlaylistData}
+            filteredPlaylistData={filteredPlaylistData}
+          />
+        </>
+      )}
+
       <div className="flex flex-wrap justify-center gap-20 pb-20">
+        {playlistData.length < 1 && !noResult && !loading && (
+          <span className="text-xl text-white">No results.</span>
+        )}
         {loading ? (
           <l-dot-wave size={100} color={"rgb(22,163,74)"}></l-dot-wave>
         ) : (
-          //   Array(10)
-          //     .fill("")
           playlistData.map((e, i) => (
             <div
               onClick={() => {
