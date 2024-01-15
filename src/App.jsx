@@ -20,7 +20,7 @@ function App() {
         <div className="flex items-center my-12 max-w-[60rem] mx-6 gap-2">
           <div className="flex flex-col">
             <label htmlFor="" className="text-xl text-white max-sm:text-base">
-              Enter your playlist
+              Enter your spotify playlist
             </label>
             <div className="flex">
               <input
