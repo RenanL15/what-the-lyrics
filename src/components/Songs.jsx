@@ -12,7 +12,7 @@ import SearchTrack from "./SearchTrack";
 export default function Songs({ playlistUrl }) {
   const [playlistData, setPlaylistData] = useState([]);
   const [filteredPlaylistData, setFilteredPlaylistData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [noResult, setNoResult] = useState(false);
   const [track, setTrack] = useState("");
   const [correctTrack, setCorrectTrack] = useState(null);
@@ -20,7 +20,7 @@ export default function Songs({ playlistUrl }) {
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   useEffect(() => {
-    const URL = playlistUrl.substr(34, playlistUrl.length);
+    const URL = playlistUrl;
     setNoResult(false);
     setLoading(true);
     setCorrectTrack(null);
@@ -36,41 +36,46 @@ export default function Songs({ playlistUrl }) {
         })
       )
       .then((token) => {
-        axios
-          .get(`https://api.spotify.com/v1/playlists/${URL}/tracks`, {
-            headers: {
-              Authorization: `Bearer ${token.data.access_token}`,
-            }
-          })
-          .then((res) => {
-            const filteredTracks = res.data.items.filter(
-              (a) => a.track.preview_url != null
-            );
-            axios.get(res.data.next, {
-              headers: {
-                Authorization: `Bearer ${token.data.access_token}`,
-              },
-            }).then(res => {
-              const moreTracks = filteredTracks.concat(...res.data.items)
-              const randomTrack =
-                filteredTracks[
-                  Math.floor(Math.random() * filteredTracks.length - 1)
-                ];
-                console.log(moreTracks);
-                
-              setPlaylistData(moreTracks);
-              setFilteredPlaylistData(filteredTracks);
-              setTrack(randomTrack.track.preview_url);
-              setCorrectTrack(randomTrack.track.id);
-              setLoading(false);
-              setNoResult(false);
-            })
-          })
-          .catch(() => {
-            setLoading(false);
-            setNoResult(true);
-            setPlaylistData([]);
-          });
+        const fetchTracks = async () => {
+          let allTracks = [];
+          let apiURL = `https://api.spotify.com/v1/playlists/${URL}/tracks`;
+          while (apiURL != null) {
+            console.log(apiURL);
+            await axios
+              .get(apiURL, {
+                headers: {
+                  Authorization: `Bearer ${token.data.access_token}`,
+                },
+              })
+              .then((res) => {
+                const filteredTracks = res.data.items.filter(
+                  (a) => a.track.preview_url != null
+                );
+                if (res.data.next) {
+                  apiURL = res.data.next;
+                } else {
+                  apiURL = null;
+                }
+                allTracks = allTracks.concat(filteredTracks);
+                console.log(filteredTracks);
+              })
+              .catch(() => {
+                setLoading(false);
+                setNoResult(true);
+                setPlaylistData([]);
+                apiURL = null;
+              });
+          }
+          const randomTrack =
+            allTracks[Math.floor(Math.random() * allTracks.length - 1)];
+          setPlaylistData(allTracks);
+          setFilteredPlaylistData(allTracks);
+          setTrack(randomTrack.track.preview_url);
+          setCorrectTrack(randomTrack.track.id);
+          setLoading(false);
+          setNoResult(false);
+        };
+        fetchTracks();
       })
       .catch(() => {
         setLoading(false);
@@ -90,7 +95,6 @@ export default function Songs({ playlistUrl }) {
           /> */}
         </>
       )}
-
       <div className="flex flex-wrap justify-center gap-20 pb-20">
         {playlistData.length < 1 && !noResult && !loading && (
           <span className="text-xl text-white">No results.</span>
@@ -123,7 +127,8 @@ export default function Songs({ playlistUrl }) {
                   incorrectGuess === false &&
                   e.track.id === correctTrack &&
                   "bg-green-800 bg-opacity-20 animate__animated animate__flash"
-                }`}>
+                }`}
+            >
               <img
                 src={
                   e.track.album.images.length < 1
