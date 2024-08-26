@@ -35,27 +35,36 @@ export default function Songs({ playlistUrl }) {
           client_secret: import.meta.env.VITE_CLIENT_SECRET,
         })
       )
-      .then((res) => {
+      .then((token) => {
         axios
-          .get(`https://api.spotify.com/v1/playlists/${URL}`, {
+          .get(`https://api.spotify.com/v1/playlists/${URL}/tracks`, {
             headers: {
-              Authorization: `Bearer ${res.data.access_token}`,
-            },
+              Authorization: `Bearer ${token.data.access_token}`,
+            }
           })
           .then((res) => {
-            const filteredTracks = res.data.tracks.items.filter(
+            const filteredTracks = res.data.items.filter(
               (a) => a.track.preview_url != null
             );
-            const randomTrack =
-              filteredTracks[
-                Math.floor(Math.random() * filteredTracks.length - 1)
-              ];
-            setPlaylistData(filteredTracks);
-            setFilteredPlaylistData(filteredTracks);
-            setTrack(randomTrack.track.preview_url);
-            setCorrectTrack(randomTrack.track.id);
-            setLoading(false);
-            setNoResult(false);
+            axios.get(res.data.next, {
+              headers: {
+                Authorization: `Bearer ${token.data.access_token}`,
+              },
+            }).then(res => {
+              const moreTracks = filteredTracks.concat(...res.data.items)
+              const randomTrack =
+                filteredTracks[
+                  Math.floor(Math.random() * filteredTracks.length - 1)
+                ];
+                console.log(moreTracks);
+                
+              setPlaylistData(moreTracks);
+              setFilteredPlaylistData(filteredTracks);
+              setTrack(randomTrack.track.preview_url);
+              setCorrectTrack(randomTrack.track.id);
+              setLoading(false);
+              setNoResult(false);
+            })
           })
           .catch(() => {
             setLoading(false);
@@ -74,11 +83,11 @@ export default function Songs({ playlistUrl }) {
       {!noResult && !loading && (
         <>
           <TrackPlayer track={track} />
-          <SearchTrack
+          {/* <SearchTrack
             playlistData={playlistData}
             setPlaylistData={setPlaylistData}
             filteredPlaylistData={filteredPlaylistData}
-          />
+          /> */}
         </>
       )}
 
