@@ -24,7 +24,7 @@ export default function Songs({ playlistUrl }) {
       const formatURL = playlistUrl.match(/(?<=playlist\/)[^?]+/);
     }
     else {
-      const formatURL = "";
+      const formatURL = [""];
     }
     setNoResult(false);
     setLoading(true);
