@@ -20,7 +20,7 @@ export default function Songs({ playlistUrl }) {
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   useEffect(() => {
-    const URL = playlistUrl;
+    const formatURL = playlistUrl.match(/(?<=playlist\/)[^?]+/);
     setNoResult(false);
     setLoading(true);
     setCorrectTrack(null);
@@ -38,7 +38,7 @@ export default function Songs({ playlistUrl }) {
       .then((token) => {
         const fetchTracks = async () => {
           let allTracks = [];
-          let apiURL = `https://api.spotify.com/v1/playlists/${URL}/tracks`;
+          let apiURL = `https://api.spotify.com/v1/playlists/${formatURL[0]}/tracks`;
           while (apiURL != null) {
             console.log(apiURL);
             await axios
