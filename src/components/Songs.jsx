@@ -20,11 +20,9 @@ export default function Songs({ playlistUrl }) {
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   useEffect(() => {
+    let formatURL = [""];
     if (playlistUrl != "") {
-      const formatURL = playlistUrl.match(/(?<=playlist\/)[^?]+/);
-    }
-    else {
-      const formatURL = [""];
+      formatURL = playlistUrl.match(/(?<=playlist\/)[^?]+/);
     }
     setNoResult(false);
     setLoading(true);
